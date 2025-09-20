@@ -14,4 +14,6 @@ dependencies = [
     "google-generativeai",
     "httpx",
     "litellm>=1.77.1",
+    "pydantic-core==2.33.2",
+    "tiktoken>=0.11.0",
 ]
