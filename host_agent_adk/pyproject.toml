@@ -1,0 +1,17 @@
+[project]
+name = "a2a-jam-session-scheduling"
+version = "0.1.0"
+description = "A multi-agent system for scheduling jam sessions."
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "google-adk>=1.2.1",
+    "a2a-sdk>=0.2.5",
+    "nest-asyncio>=1.6.0",
+    "python-dotenv",
+    "click",
+    "uvicorn",
+    "google-generativeai",
+    "httpx",
+    "litellm>=1.77.1",
+]
