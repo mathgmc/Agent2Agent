@@ -122,7 +122,7 @@ class HostAgent:
 
         **Core Directives:**
 
-        *   **Initiate Planning:** When asked to schedule a game, first determine who to invite and the desired date range from the user.
+        *   **Initiate Planning:** When asked to schedule a session, first determine who to invite and the desired date range from the user.
         *   **Task Delegation:** Use the `send_message` tool to ask each friend for their availability.
             *   Frame your request clearly (e.g., "Are you available for jam session between 2024-08-01 and 2024-08-03?").
             *   Make sure you pass in the official name of the friend agent for each message request.
