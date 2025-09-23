@@ -2,25 +2,25 @@ from datetime import date, datetime, timedelta
 from typing import Dict
 
 # In-memory database for jam session schedules, mapping date to a dictionary of time slots and party names
-COURT_SCHEDULE: Dict[str, Dict[str, str]] = {}
+JAM_SPOT_SCHEDULE: Dict[str, Dict[str, str]] = {}
 
 def generate_friends_schedule():
     """Generates a schedule for the jam session for the next 7 days."""
-    global COURT_SCHEDULE
+    global JAM_SPOT_SCHEDULE
     today = date.today()
     possible_times = [f"{h:02}:00" for h in range(8, 21)]  # 8 AM to 8 PM
 
     for i in range(7):
         current_date = today + timedelta(days=i)
         date_str = current_date.strftime("%Y-%m-%d")
-        COURT_SCHEDULE[date_str] = {time: "unknown" for time in possible_times}
+        JAM_SPOT_SCHEDULE[date_str] = {time: "unknown" for time in possible_times}
 
 
 # Initialize the schedule when the module is loaded
 generate_friends_schedule()
 
 
-def list_availabilities(date: str) -> dict:
+def list_jam_spot_availabilities(date: str) -> dict:
     """
     Lists the available and booked time slots for a jam session on a given date.
 
@@ -38,11 +38,11 @@ def list_availabilities(date: str) -> dict:
             "message": "Invalid date format. Please use YYYY-MM-DD.",
         }
 
-    daily_schedule = COURT_SCHEDULE.get(date)
+    daily_schedule = JAM_SPOT_SCHEDULE.get(date)
     if not daily_schedule:
         return {
             "status": "success",
-            "message": f"The court is not open on {date}.",
+            "message": f"The jam spot is not open on {date}.",
             "schedule": {},
         }
 
@@ -88,13 +88,13 @@ def book_jam_session(
     if start_dt >= end_dt:
         return {"status": "error", "message": "Start time must be before end time."}
 
-    if date not in COURT_SCHEDULE:
-        return {"status": "error", "message": f"The court is not open on {date}."}
+    if date not in JAM_SPOT_SCHEDULE:
+        return {"status": "error", "message": f"The jam spot is not open on {date}."}
 
     if not reservation_name:
         return {
             "status": "error",
-            "message": "Cannot book a court without a reservation name.",
+            "message": "Cannot book a jam spot without a reservation name.",
         }
 
     required_slots = []
@@ -103,7 +103,7 @@ def book_jam_session(
         required_slots.append(current_time.strftime("%H:%M"))
         current_time += timedelta(hours=1)
 
-    daily_schedule = COURT_SCHEDULE.get(date, {})
+    daily_schedule = JAM_SPOT_SCHEDULE.get(date, {})
     for slot in required_slots:
         if daily_schedule.get(slot, "booked") != "unknown":
             party = daily_schedule.get(slot)
@@ -113,7 +113,7 @@ def book_jam_session(
             }
 
     for slot in required_slots:
-        COURT_SCHEDULE[date][slot] = reservation_name
+        JAM_SPOT_SCHEDULE[date][slot] = reservation_name
 
     return {
         "status": "success",

@@ -41,7 +41,7 @@ from .config import (
 )
 from .jam_session_tools import (
     book_jam_session,
-    list_availabilities,
+    list_jam_spot_availabilities,
 )
 from .remote_agent_connection import RemoteAgentConnections
 
@@ -97,7 +97,7 @@ class HostAgent:
             tools=[
                 self.send_message,
                 book_jam_session,
-                list_availabilities,
+                list_jam_spot_availabilities,
             ],
         )
 
@@ -127,9 +127,9 @@ class HostAgent:
             *   Frame your request clearly (e.g., "Are you available for jam session between 2024-08-01 and 2024-08-03?").
             *   Make sure you pass in the official name of the friend agent for each message request.
         *   **Analyze Responses:** Once you have availability from all friends, analyze the responses to find common timeslots.
-        *   **Check Friends Availability:** Before proposing times to the user, use the `list_availabilities` tool to ensure the friends is also free at the common timeslots.
-        *   **Propose and Confirm:** Present the common, court-available timeslots to the user for confirmation.
-        *   **Book the Court:** After the user confirms a time, use the `book_jam_session` tool to make the reservation. This tool requires a `start_time` and an `end_time`.
+        *   **Check Friends Availability:** Before proposing times to the user, use the `list_jam_spot_availabilities` tool to ensure the friends is also free at the common timeslots.
+        *   **Propose and Confirm:** Present the common, jam spot available timeslots to the user for confirmation.
+        *   **Book the jam spot:** After the user confirms a time, use the `book_jam_session` tool to make the reservation. This tool requires a `start_time` and an `end_time`.
         *   **Transparent Communication:** Relay the final booking confirmation, including the booking ID, to the user. Do not ask for permission before contacting friend agents.
         *   **Tool Reliance:** Strictly rely on available tools to address user requests. Do not generate responses based on assumptions.
         *   **Readability:** Make sure to respond in a concise and easy to read format (bullet points are good).
