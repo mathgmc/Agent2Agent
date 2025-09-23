@@ -1,5 +1,3 @@
-"""Integration layer that adapts the Cartola ADK agent to the A2A runtime."""
-
 import asyncio
 import logging
 from collections.abc import AsyncGenerator
@@ -23,7 +21,6 @@ from google.adk.events import Event
 from google.genai import types
 
 logger = logging.getLogger(__name__)
-# Default to verbose logging so orchestration systems can trace async execution.
 logger.setLevel(logging.DEBUG)
 
 
@@ -31,15 +28,12 @@ class CartolaAgentExecutor(AgentExecutor):
     """An AgentExecutor that runs Cartola's ADK-based Agent."""
 
     def __init__(self, runner: Runner):
-        # Runner instance is responsible for executing the Google ADK agent graph.
         self.runner = runner
-        # Tracks sessions currently in-flight so we can reuse stateful contexts.
         self._running_sessions = {}
 
     def _run_agent(
         self, session_id, new_message: types.Content
     ) -> AsyncGenerator[Event, None]:
-        """Start streaming agent events for a given session/user payload."""
         return self.runner.run_async(
             session_id=session_id, user_id="cartola_agent", new_message=new_message
         )
@@ -50,7 +44,6 @@ class CartolaAgentExecutor(AgentExecutor):
         session_id: str,
         task_updater: TaskUpdater,
     ) -> None:
-        """Drive the ADK runner and translate events into TaskUpdater calls."""
         session_obj = await self._upsert_session(session_id)
         session_id = session_obj.id
 
@@ -83,19 +76,15 @@ class CartolaAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ):
-        """Entry point invoked by A2A whenever a new task needs processing."""
         if not context.task_id or not context.context_id:
             raise ValueError("RequestContext must have task_id and context_id")
         if not context.message:
             raise ValueError("RequestContext must have a message")
 
-        # Task updater manages the task status
         updater = TaskUpdater(event_queue, context.task_id, context.context_id)
         if not context.current_task:
             updater.submit()
         updater.start_work()
-
-        # Start Processing the request
         await self._process_request(
             types.UserContent(
                 parts=convert_a2a_parts_to_genai(context.message.parts),
@@ -108,7 +97,6 @@ class CartolaAgentExecutor(AgentExecutor):
         raise ServerError(error=UnsupportedOperationError())
 
     async def _upsert_session(self, session_id: str):
-        """Ensure we have a persistent ADK session backing the A2A conversation."""
         session = await self.runner.session_service.get_session(
             app_name=self.runner.app_name, user_id="cartola_agent", session_id=session_id
         )

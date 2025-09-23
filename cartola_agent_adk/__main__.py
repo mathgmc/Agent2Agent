@@ -24,12 +24,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class MissingAPIKeyError(Exception):
-    """Exception for missing API key."""
-
-    pass
-
-
 def main():
     """Starts the agent server."""
     host = "localhost"
@@ -41,11 +35,11 @@ def main():
             name="Check Cartola's Schedule",
             description="Checks Cartola's availability for a jam session on a given date.",
             tags=["scheduling", "calendar"],
-            examples=["Is Cartola free to a jam session tomorrow?"],
+            examples=["Is Cartola free to jam tomorrow?"],
         )
         agent_card = AgentCard(
             name="Cartola Agent",
-            description="An agent that manages Cartola's schedule for jam session.",
+            description="An agent that manages Cartola's schedule for jam sessions.",
             url=f"http://{host}:{port}/",
             version="1.0.0",
             defaultInputModes=["text/plain"],
@@ -73,9 +67,7 @@ def main():
         )
 
         uvicorn.run(server.build(), host=host, port=port)
-    except MissingAPIKeyError as e:
-        logger.error(f"Error: {e}")
-        exit(1)
+
     except Exception as e:
         logger.error(f"An error occurred during server startup: {e}")
         exit(1)

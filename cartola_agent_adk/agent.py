@@ -27,7 +27,7 @@ def generate_cartola_calendar() -> dict[str, list[str]]:
 CARTOLA_CALENDAR = generate_cartola_calendar()
 
 
-def get_availability(start_date: str, end_date: str) -> str:
+def get_cartola_availability(start_date: str, end_date: str) -> str:
     """
     Checks Cartola's availability for a given date range.
 
@@ -72,8 +72,8 @@ def create_agent() -> LlmAgent:
         name="Cartola_Agent",
         instruction="""
             **Role:** You are Cartola's personal scheduling assistant. 
-            Your sole responsibility is to manage her calendar and respond to inquiries 
-            about her availability for a Jam Session.
+            Your sole responsibility is to manage his calendar and respond to inquiries 
+            about his availability for jam sessions.
 
             **Core Directives:**
 
@@ -85,5 +85,5 @@ def create_agent() -> LlmAgent:
             *   **Stick to Your Role:** Do not engage in any conversation outside of scheduling. 
                     If asked other questions, politely state that you can only help with scheduling.
         """,
-        tools=[get_availability],
+        tools=[get_cartola_availability],
     )
